@@ -30,11 +30,13 @@ export class MetaQueryDatasource {
     return this.$q.all(promises).then(results => {
       let data = _.flatten(_.map(results, 'data'));
       let indexedData = _.keyBy(data, 'refId');
+      let referencedRefId = {};
       _.each(options.targets, target => {
         let dsName = target.datasource;
         if (dsName === 'Meta Query') {
           let expr = target.expression.split(/ /);
           let opRefId = expr[0].replace(/#/, '');
+          referencedRefId[opRefId] = true;
           let datapoints = _.map(indexedData[opRefId].datapoints, d => {
             if (!d[0]) {
               return [d[0], d[1]];
@@ -63,6 +65,9 @@ export class MetaQueryDatasource {
             datapoints: datapoints
           })
         }
+      });
+      data = _.filter(data, d => {
+        return !referencedRefId[d.refId];
       });
       return { data: data };
     });
