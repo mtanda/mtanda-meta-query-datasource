@@ -1,0 +1,27 @@
+{
+  "name": "Meta Query",
+  "id": "mtanda-meta-query-datasource",
+  "type": "datasource",
+
+  "builtIn": false,
+  "metrics": true,
+  "mixed": true,
+
+  "info": {
+    "description": "Meta Query datasource",
+    "author": {
+      "name": "Mitsuhiro Tanda"
+    },
+    "links": [
+      {"name": "GitHub", "url": "https://github.com/mtanda/grafana-meta-query-datasource"},
+      {"name": "MIT License", "url": "https://github.com/mtanda/grafana-meta-query-datasource/blob/master/LICENSE"}
+    ],
+    "version": "1.0.0",
+    "updated": "2017-02-16"
+  },
+
+  "dependencies": {
+    "grafanaVersion": "3.x.x",
+    "plugins": [ ]
+  }
+}
