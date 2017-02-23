@@ -57,7 +57,11 @@ System.register(['lodash'], function (_export, _context) {
 
               return _this.datasourceSrv.get(dsName).then(function (ds) {
                 var opt = angular.copy(options);
-                opt.targets = targets;
+                opt.targets = targets.map(function (t) {
+                  // temporal fix
+                  t.hide = false;
+                  return t;
+                });
                 return ds.query(opt).then(function (results) {
                   _.each(results.data, function (result, idx) {
                     result.refId = opt.targets[idx].refId;
@@ -70,11 +74,13 @@ System.register(['lodash'], function (_export, _context) {
             return this.$q.all(promises).then(function (results) {
               var data = _.flatten(_.map(results, 'data'));
               var indexedData = _.keyBy(data, 'refId');
+              var referencedRefId = {};
               _.each(options.targets, function (target) {
                 var dsName = target.datasource;
                 if (dsName === 'Meta Query') {
                   var expr = target.expression.split(/ /);
                   var opRefId = expr[0].replace(/#/, '');
+                  referencedRefId[opRefId] = true;
                   var datapoints = _.map(indexedData[opRefId].datapoints, function (d) {
                     if (!d[0]) {
                       return [d[0], d[1]];
@@ -103,6 +109,9 @@ System.register(['lodash'], function (_export, _context) {
                     datapoints: datapoints
                   });
                 }
+              });
+              data = _.filter(data, function (d) {
+                return !referencedRefId[d.refId];
               });
               return { data: data };
             });

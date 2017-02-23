@@ -17,7 +17,11 @@ export class MetaQueryDatasource {
 
       return this.datasourceSrv.get(dsName).then(ds => {
         var opt = angular.copy(options);
-        opt.targets = targets;
+        opt.targets = targets.map(t => {
+          // temporal fix
+          t.hide = false;
+          return t;
+        });
         return ds.query(opt).then(results => {
           _.each(results.data, (result, idx) => {
             result.refId = opt.targets[idx].refId;
